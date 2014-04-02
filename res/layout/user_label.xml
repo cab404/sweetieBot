@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/Text.Default.White" android:padding="16dp">
+    <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:id="@+id/avatar" android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+            android:src="@drawable/muffin" android:background="@drawable/avatar_frame"
+            android:layout_marginRight="8dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cab404"
+            android:id="@+id/nick"
+            android:textColor="@color/Text.Default.Black"
+            android:layout_toRightOf="@+id/avatar" android:layout_alignTop="@+id/avatar"
+            android:textSize="@dimen/Font.Size.Subheader"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/lipsum"
+              android:id="@+id/name"
+              android:textColor="@color/Text.Gray"
+              android:layout_alignLeft="@+id/nick" android:layout_below="@+id/nick"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4234,21"
+            android:id="@+id/strength"
+            android:textSize="@dimen/Font.Size.Small"
+            android:textColor="@color/Text.Blue"
+            android:layout_alignLeft="@+id/nick" android:layout_below="@+id/name"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+1732.12"
+              android:id="@+id/votes" android:textSize="@dimen/Font.Size.Small"
+              android:textColor="@color/Text.Green"
+              android:layout_toRightOf="@+id/nick" android:layout_below="@+id/name"/>
+</RelativeLayout>

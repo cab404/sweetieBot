@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+
+        >
+    <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:id="@+id/drawer_indicator" android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/drawer"/>
+    <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/icon" android:layout_toRightOf="@+id/drawer_indicator"
+            android:layout_alignParentTop="false" android:src="@drawable/icon" android:layout_centerVertical="true"/>
+    <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_centerVertical="true" android:layout_alignParentRight="true" android:id="@+id/__frame__"
+            android:layout_toRightOf="@+id/icon">
+    </FrameLayout>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Дыа, это Табун."
+            android:id="@+id/title"
+            android:textSize="@dimen/Font.Size.Normal" android:layout_alignParentLeft="false"
+            android:layout_marginLeft="8dp" android:layout_toRightOf="@+id/icon"
+            android:layout_alignWithParentIfMissing="false" android:layout_centerVertical="true"
+            android:textColor="@color/Text.Default.White" android:singleLine="true" android:ellipsize="marquee"
+            android:layout_toLeftOf="@+id/__frame__" android:layout_alignRight="@+id/__frame__"
+            android:layout_marginRight="60dp"/>
+</RelativeLayout>

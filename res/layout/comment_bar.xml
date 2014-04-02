@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/Text.Default.White"
+        android:layout_centerInParent="true">
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/space"
+            android:background="@color/Luna.Body.Stroke" android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false" android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="false" android:layout_below="@+id/space" android:id="@+id/tools">
+        <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/apply"
+                android:src="@drawable/reply"
+                android:layout_alignParentRight="true" android:layout_centerVertical="true" android:padding="8dp"/>
+        <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/apply">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:id="@+id/bold" android:src="@drawable/bold" android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"/>
+                <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/italic"
+                           android:src="@drawable/italic" android:layout_marginLeft="5dp"
+                           android:layout_marginRight="5dp"/>
+                <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/strike"
+                           android:src="@drawable/strike" android:layout_marginLeft="5dp"
+                           android:layout_marginRight="5dp"/>
+                <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/underlined"
+                           android:src="@drawable/underlined" android:layout_marginLeft="5dp"
+                           android:layout_marginRight="5dp"/>
+                <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/quote"
+                           android:src="@drawable/quote" android:layout_marginLeft="5dp"
+                           android:layout_marginRight="5dp"/>
+                <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/link"
+                           android:src="@drawable/ahref" android:layout_marginLeft="5dp"
+                           android:layout_marginRight="5dp"/>
+                <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/spoiler"
+                           android:src="@drawable/spoiler_icon" android:layout_marginLeft="5dp"
+                           android:layout_marginRight="5dp"/>
+                <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/pic"
+                           android:src="@drawable/pic" android:layout_marginLeft="5dp"
+                           android:layout_marginRight="5dp"/>
+                <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/down"
+                           android:src="@drawable/down" android:layout_marginLeft="5dp"
+                           android:layout_marginRight="5dp"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </RelativeLayout>
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android"
+            android:background="@color/Text.Default.White"
+            android:layout_centerInParent="true" android:id="@+id/body" android:layout_below="@+id/tools">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text"
+                android:hint="Комментарий"
+                android:textColor="@color/Text.Default.Black"
+                android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true" android:inputType="textMultiLine|textWebEditText"
+                android:cursorVisible="true"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ответ на комментарий гражданина N"
+                android:id="@+id/to"
+                android:textSize="@dimen/Font.Size.ReallySmall" android:textColor="@color/Text.Default.Black"
+                android:paddingLeft="12dp"
+                android:layout_below="@+id/text"/>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label">Табун</string>
+    <string name="app_name">sweetieBot</string>
+
+    <!-- Не знаю, где, но использовать его будем точно.  -->
+    <string name="replacer">Ничего тут нет.</string>
+    <string name="lipsum">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of
+        classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
+        Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem
+        Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable
+        source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of
+        Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during
+        the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section
+        1.10.32.
+    </string>
+
+    <string name="greeting">
+        <b>sweetieBot</b>
+    </string>
+
+    <!-- Сюда пихаем всякие поля-значения -->
+    <string name="login_title">Логин</string>
+    <string name="login_example">princessLuna</string>
+
+    <string name="password_title">Пароль</string>
+    <string name="password_example">⚫⚫⚫⚫⚫⚫⚫⚫⚫</string>
+
+    <!---->
+
+    <string name="search">Поиск</string>
+    <string name="write_topic">Написать пост</string>
+
+
+    <string-array name="error_on_login">
+        <item>"Неправильная пара логин/пароль, ну или еще что-то."</item>
+        <item>"Больше эррор-мессаджей богу эррор-мессаджей!"</item>
+        <item>"All your base are belong to us."</item>
+        <item>"YOU SHALL NOT PASS!"</item>
+        <item>"Фыр-фыр-фыр!"</item>
+        <item>"Нету таких"</item>
+        <item>"Кусь!"</item>
+        <item>"Нит."</item>
+    </string-array>
+    <string-array name="reply_to">
+        <item>"Ответ на комментарий некого "</item>
+        <item>"Ответ на комментарий некой "</item>
+        <item>"Ответ на комментарий мсье "</item>
+        <item>"Ответ на комментарий броняши "</item>
+        <item>"Ответ на комментарий лучшей пони - "</item>
+        <item>"Вы решили поддержать беседу с госпожой "</item>
+        <item>"Вы решили поддержать беседу с господином "</item>
+        <item>"Выше вершится таинство написания ответа на комментарий загадочного пони - "</item>
+    </string-array>
+
+
+</resources>

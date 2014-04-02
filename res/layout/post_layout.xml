@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:orientation="vertical"
+            android:background="@color/Text.Default.White"
+            android:id="@+id/things">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/__root__"
+                >
+            <ListView
+                    android:layout_width="fill_parent"
+                    android:dividerHeight="0dp"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/list"
+                    android:headerDividersEnabled="false"
+                    android:fastScrollEnabled="false"
+                    android:smoothScrollbar="true"
+                    />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include android:layout_width="64dp"
+             android:layout_height="match_parent"
+             layout="@layout/post_action_bar"
+             android:id="@+id/action_bar"
+             android:layout_gravity="start"
+            />
+
+</android.support.v4.widget.DrawerLayout>

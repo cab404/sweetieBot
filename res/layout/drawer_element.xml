@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48dp" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/Text.Blue" android:animationCache="false">
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:animationCache="false"
+            android:background="@color/Text.Default.White">
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="@string/login_example"
+                android:id="@+id/title" android:layout_alignParentLeft="true" android:layout_centerVertical="true"
+                android:textSize="@dimen/Font.Size.Normal"
+                android:textColor="@color/Text.Default.Black" android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true" android:layout_alignParentRight="true" android:singleLine="true"
+                android:gravity="center|left" android:paddingLeft="8dp"
+                android:layout_gravity="center" android:layout_marginRight="16dp" android:layout_marginLeft="8dp"/>
+    </FrameLayout>
+</RelativeLayout>

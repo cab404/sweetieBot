@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="everypony.sweetieBot"
+          android:installLocation="preferExternal"
+          android:versionCode="83"
+          android:versionName="2.3.2 (0cc54adc3951)"
+        >
+
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+            android:icon="@drawable/icon"
+            android:label="@string/app_name"
+            android:theme="@style/LunaTheme"
+            android:hardwareAccelerated="true"
+            android:allowBackup="true"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            >
+
+        <!---->
+        <!-- Главное окно приложения -->
+        <!---->
+
+        <activity android:name=".activities.Home"
+                  android:label="@string/label"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+                >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <data
+                        android:host="tabun.everypony.ru"
+                        android:pathPattern="/blog/.*/"
+                        android:scheme="http"
+                        />
+            </intent-filter>
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+
+        <!---->
+        <!-- Окно регистрации -->
+        <!---->
+
+        <activity android:theme="@android:style/Theme.Holo.NoActionBar"
+                  android:name=".activities.Authentication"
+                  android:label="@string/label"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+                >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+
+        </activity>
+
+
+        <!---->
+        <!-- Окно топика -->
+        <!---->
+
+        <activity android:name=".activities.PostActivity"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+                >
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                        android:host="tabun.everypony.ru"
+                        android:pathPattern="/blog/.*/.*.html.*"
+                        android:scheme="http"
+                        />
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                        android:host="tabun.everypony.ru"
+                        android:pathPattern="/blog/.*.html.*"
+                        android:scheme="http"
+                        />
+
+            </intent-filter>
+
+
+        </activity>
+
+        <!---->
+        <!-- Окно входа за пользователя -->
+        <!---->
+
+        <activity android:name=".activities.Login"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+                  android:exported="true"
+                />
+
+
+        <!---->
+        <!-- Окно данных пользователя -->
+        <!---->
+        <activity android:name=".activities.UserActivity"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+                  android:exported="true"
+                >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="tabun.everypony.ru"
+                      android:pathPattern="/profile/.*/"
+                      android:scheme="http"
+                        />
+                <data android:host="tabun.everypony.ru"
+                      android:pathPattern="/profile/.*"
+                      android:scheme="http"
+                        />
+            </intent-filter>
+        </activity>
+
+
+        <!---->
+        <!-- Сервис аутентификации -->
+        <!---->
+        <service
+                android:permission="android.permission.AUTHENTICATE_ACCOUNTS"
+                android:name=".authentication.AuthService"
+                android:label="@string/label"
+                android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+                >
+
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+
+            <meta-data
+                    android:label="@string/app_name"
+                    android:name="android.accounts.AccountAuthenticator"
+                    android:resource="@xml/account"
+                    />
+        </service>
+
+        <activity android:name=".activities.AboutActivity"/>
+
+    </application>
+
+</manifest>

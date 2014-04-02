@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Уровни комментариев-->
+<resources>
+    <color name="Comments.Levels.1">#F1EFF3</color>
+    <color name="Comments.Levels.2">#E6E4E9</color>
+    <color name="Comments.Levels.3">#DAD9E0</color>
+    <color name="Comments.Levels.4">#CFCED6</color>
+    <color name="Comments.Levels.5">#C3C3CD</color>
+    <color name="Comments.Levels.6">#B8B8C3</color>
+    <color name="Comments.Levels.7">#ACADBA</color>
+    <color name="Comments.Levels.8">#A1A2B0</color>
+    <color name="Comments.Levels.9">#9597A7</color>
+    <color name="Comments.Levels.10">#898B9E</color>
+    <color name="Comments.Levels.11">#7E8094</color>
+    <color name="Comments.Levels.12">#72758B</color>
+    <color name="Comments.Levels.13">#676A81</color>
+    <color name="Comments.Levels.14">#5B5F78</color>
+    <color name="Comments.Levels.15">#50546E</color>
+    <color name="Comments.Levels.16">#444965</color>
+    <color name="Comments.Levels.17">#393E5B</color>
+    <color name="Comments.Levels.18">#2D3352</color>
+    <color name="Comments.Levels.19">#222848</color>
+    <color name="Comments.Levels.20">#161D3F</color>
+    <color name="Comments.Levels.21">#201F3F</color>
+    <color name="Comments.Levels.22">#2B213F</color>
+    <color name="Comments.Levels.23">#35233E</color>
+    <color name="Comments.Levels.24">#40253E</color>
+    <color name="Comments.Levels.25">#4A263E</color>
+    <color name="Comments.Levels.26">#54283E</color>
+    <color name="Comments.Levels.27">#5F2A3E</color>
+    <color name="Comments.Levels.28">#692C3D</color>
+    <color name="Comments.Levels.29">#742E3D</color>
+    <color name="Comments.Levels.30">#7E303D</color>
+    <color name="Comments.Levels.31">#88323D</color>
+    <color name="Comments.Levels.32">#93343D</color>
+    <color name="Comments.Levels.33">#9D363C</color>
+    <color name="Comments.Levels.34">#A8383C</color>
+    <color name="Comments.Levels.35">#B23A3C</color>
+    <color name="Comments.Levels.36">#BC3B3C</color>
+    <color name="Comments.Levels.37">#C73D3C</color>
+    <color name="Comments.Levels.38">#D13F3B</color>
+    <color name="Comments.Levels.39">#DC413B</color>
+    <color name="Comments.Levels.40">#E6433B</color>
+</resources>

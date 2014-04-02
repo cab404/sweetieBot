@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="Font.Size.Big">24sp</dimen>
+    <dimen name="Font.Size.Subheader">20sp</dimen>
+    <dimen name="Font.Size.Normal">16sp</dimen>
+    <dimen name="Font.Size.Small">14sp</dimen>
+    <dimen name="Font.Size.ReallySmall">10sp</dimen>
+    <dimen name="ActionBar">55dp</dimen>
+
+</resources>

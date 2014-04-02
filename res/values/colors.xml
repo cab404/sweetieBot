@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Luna.Body">#404680</color>
+    <color name="Luna.Body.Shadow">#363b6c</color>
+    <color name="Luna.Body.Stroke">#161d3f</color>
+
+    <color name="Luna.Mane">#2f55c3</color>
+    <color name="Luna.Mane.Fill">#8159ce</color>
+
+    <color name="Text.Default.Black">#373438</color>
+    <color name="Text.Default.White">#FDFAFC</color>
+    <color name="Text.Gray">#948a99</color>
+    <color name="Text.Green">#2CA13B</color>
+    <color name="Text.LightGreen">#DDFFDD</color>
+    <color name="Text.Red">#FF0000</color>
+    <color name="Text.Blue">#628fa5</color>
+
+    <color name="Divider">#cbc2ca</color>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<EditText
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:id="@+id/text"
+
+        android:text="Test"
+        android:textSize="@dimen/Font.Size.Small"
+        android:textColor="@color/Text.Default.Black"
+
+        android:editable="false"
+        android:singleLine="false"
+
+        android:hapticFeedbackEnabled="true"
+        android:clickable="true"
+        android:longClickable="true"
+
+        android:textIsSelectable="true"
+
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+
+
+        android:background="@android:color/transparent"
+        android:inputType="none"
+        android:typeface="normal"/>

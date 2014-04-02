@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_gravity="left|right|top|bottom">
+    <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true" android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:tileMode="repeat"
+            android:src="@drawable/luna"
+            android:contentDescription="@string/lipsum"
+            android:id="@+id/login_background" android:layout_alignParentRight="true"
+            android:saveEnabled="false" android:adjustViewBounds="false" android:scaleType="centerCrop"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" android:layout_alignParentTop="true"
+            android:layout_marginTop="110dp" android:background="@color/Luna.Body" android:id="@+id/login_window"
+            android:layout_marginRight="10dp">
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" android:layout_marginLeft="1dp" android:layout_marginTop="1dp"
+                android:layout_marginRight="1dp" android:background="@color/Luna.Body.Stroke">
+            <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_title"
+                    android:textSize="16dp"
+                    android:layout_marginLeft="8dp"
+                    android:textColor="@color/Text.Default.White"
+                    android:singleLine="true"
+                    />
+            <EditText
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/login_login"
+
+                    android:inputType="textEmailAddress" android:textColor="@color/Text.Default.White"
+                    android:singleLine="true" android:background="@color/Luna.Body.Stroke"
+                    android:hint="@string/login_example"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                      android:layout_margin="1dp" android:background="@color/Luna.Body.Stroke">
+            <TextView android:layout_width="100dp"
+                      android:layout_height="wrap_content"
+                      android:text="@string/password_title"
+                      android:layout_marginLeft="8dp"
+                      android:textSize="16dp"
+                      android:textColor="@color/Text.Default.White" android:singleLine="true"/>
+            <EditText android:layout_width="200dp"
+                      android:layout_height="40dp"
+                      android:id="@+id/login_pwd"
+                      android:inputType="textEmailAddress"
+                      android:textColor="@color/Text.Default.White"
+                      android:password="true" android:singleLine="true" android:background="@color/Luna.Body.Stroke"
+                      android:hint="••••••••••••"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/greeting"
+            android:layout_alignParentLeft="true" android:layout_marginLeft="20dp" android:layout_alignParentTop="true"
+            android:layout_marginTop="20dp" android:textSize="30dp"
+            android:textColor="@color/Text.Default.White"
+            android:shadowRadius="4" android:selectAllOnFocus="false"/>
+    <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/login_progress"
+            android:indeterminate="false" android:layout_alignRight="@+id/login_window"
+            android:layout_below="@+id/login_window"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/status" android:layout_alignLeft="@+id/login_window"
+            android:layout_below="@+id/login_window" android:layout_toLeftOf="@+id/login_progress"
+            android:textColor="@color/Text.Default.White" android:layout_alignBottom="@+id/login_progress"
+            android:gravity="center"/>
+
+</RelativeLayout>

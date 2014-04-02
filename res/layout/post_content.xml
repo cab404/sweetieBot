@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:paddingLeft="16dp" android:paddingRight="16dp" android:paddingTop="16dp" android:paddingBottom="16dp"
+        android:background="@color/Text.Default.White">
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Заголовок"
+            android:id="@+id/title" android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+            android:textSize="@dimen/Font.Size.Big" android:textColor="@color/Text.Default.Black"
+            android:paddingBottom="8dp"
+            android:textIsSelectable="false"/>
+    <ImageView
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:id="@+id/avatar" android:layout_alignLeft="@+id/title" android:layout_below="@+id/title"
+            android:src="@drawable/icon" android:layout_marginRight="8sp" android:background="@drawable/avatar_frame"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Длинное имя имя имя"
+            android:id="@+id/author" android:layout_toRightOf="@+id/avatar" android:layout_below="@+id/title"
+            android:textSize="@dimen/Font.Size.Small" android:textColor="@color/Text.Default.Black"
+            android:singleLine="true"
+            android:layout_marginLeft="0dp" android:layout_marginTop="4dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12.05.13"
+            android:id="@+id/date"
+            android:layout_toRightOf="@+id/author" android:layout_below="@+id/title"
+            android:layout_marginLeft="4sp"
+            android:textSize="@dimen/Font.Size.Small" android:textColor="@color/Text.Gray" android:singleLine="true"
+            android:fadingEdge="horizontal" android:ellipsize="marquee" android:layout_alignRight="@+id/blog_name"
+            android:fadingEdgeLength="4sp" android:layout_marginTop="4dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Длинное название блога, куда более длинное, чем имя."
+            android:id="@+id/blog_name"
+            android:textSize="@dimen/Font.Size.Small" android:textColor="@color/Text.Default.Black"
+            android:singleLine="true" android:fadingEdge="horizontal"
+            android:ellipsize="marquee" android:layout_toRightOf="@+id/avatar"
+            android:layout_alignBottom="@+id/avatar" android:textIsSelectable="false"
+            android:layout_marginBottom="4dp" android:layout_toLeftOf="@+id/votes"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+12"
+            android:id="@+id/votes" android:layout_alignParentRight="true" android:layout_below="@+id/title"
+            android:textSize="@dimen/Font.Size.Big" android:textColor="@color/Text.Default.Black"
+            android:singleLine="true"
+            android:layout_alignBottom="@+id/avatar" android:autoText="false" android:layout_marginLeft="8sp"
+            android:textAllCaps="false" android:includeFontPadding="false" android:gravity="center_vertical"/>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:id="@+id/content" android:layout_alignLeft="@+id/title" android:layout_below="@+id/avatar"
+            android:textSize="16sp" android:paddingTop="8dp" android:orientation="vertical"
+            android:scrollbars="none" android:showDividers="none"
+            android:overScrollMode="never"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Теги: тест?, тест!, тест?!, тест!, тест?!, тест!, тест?!, тест!, тест?! Теги: тест?, тест!, тест?!, тест!, тест?!, тест!, тест?!, тест!, тест?!"
+            android:id="@+id/tags" android:layout_alignLeft="@+id/title" android:layout_below="@+id/content"
+            android:textSize="@dimen/Font.Size.Small" android:singleLine="false" android:fadingEdge="horizontal"
+            android:layout_toLeftOf="@+id/comments" android:ellipsize="marquee" android:editable="false"
+            android:paddingTop="8dp" android:fadingEdgeLength="8dp" android:textColor="@color/Text.Gray"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="124"
+            android:id="@+id/comments" android:layout_alignRight="@+id/votes" android:layout_below="@+id/content"
+            android:textSize="@dimen/Font.Size.Small" android:singleLine="true" android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginLeft="8sp" android:textColor="@color/Text.Gray"/>
+</RelativeLayout>
