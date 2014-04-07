@@ -34,31 +34,31 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:id="@+id/bold" android:src="@drawable/bold" android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"/>
+                        android:layout_marginRight="5dp" android:padding="5dp"/>
                 <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/italic"
                            android:src="@drawable/italic" android:layout_marginLeft="5dp"
-                           android:layout_marginRight="5dp"/>
+                           android:layout_marginRight="5dp" android:padding="5dp"/>
                 <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/strike"
                            android:src="@drawable/strike" android:layout_marginLeft="5dp"
-                           android:layout_marginRight="5dp"/>
+                           android:layout_marginRight="5dp" android:padding="5dp"/>
                 <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/underlined"
                            android:src="@drawable/underlined" android:layout_marginLeft="5dp"
-                           android:layout_marginRight="5dp"/>
+                           android:layout_marginRight="5dp" android:padding="5dp"/>
                 <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/quote"
                            android:src="@drawable/quote" android:layout_marginLeft="5dp"
-                           android:layout_marginRight="5dp"/>
+                           android:layout_marginRight="5dp" android:padding="5dp"/>
                 <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/link"
                            android:src="@drawable/ahref" android:layout_marginLeft="5dp"
-                           android:layout_marginRight="5dp"/>
+                           android:layout_marginRight="5dp" android:padding="5dp"/>
                 <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/spoiler"
                            android:src="@drawable/spoiler_icon" android:layout_marginLeft="5dp"
-                           android:layout_marginRight="5dp"/>
+                           android:layout_marginRight="5dp" android:padding="5dp"/>
                 <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/pic"
                            android:src="@drawable/pic" android:layout_marginLeft="5dp"
-                           android:layout_marginRight="5dp"/>
+                           android:layout_marginRight="5dp" android:padding="5dp"/>
                 <ImageView android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/down"
                            android:src="@drawable/down" android:layout_marginLeft="5dp"
-                           android:layout_marginRight="5dp"/>
+                           android:layout_marginRight="5dp" android:padding="5dp"/>
             </LinearLayout>
         </HorizontalScrollView>
     </RelativeLayout>
@@ -73,9 +73,11 @@
                 android:id="@+id/text"
                 android:hint="Комментарий"
                 android:textColor="@color/Text.Default.Black"
+                android:textCursorDrawable="@null"
                 android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true" android:inputType="textMultiLine|textWebEditText"
-                android:cursorVisible="true"/>
+                android:cursorVisible="true"
+                />
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
