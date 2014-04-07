@@ -2,6 +2,7 @@ package everypony.sweetieBot.wrappers;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.text.*;
 import android.text.method.LinkMovementMethod;
@@ -89,7 +90,8 @@ public class TextWrapper {
                 else level++;
             }
             try {
-                if (level - 1 != sublevel) continue;
+//                if ("img".equals(tag.name)) U.v(level - 1 + ":" + sublevel + ":" + tag.get("src"));
+                if (level - (tag.isStandalone ? 0 : 1) != sublevel) continue;
                 if ("spoiler".equals(tag.props.get("class"))) {
                     HTMLParser spoiler = parser.getParserForIndex(parser.getIndexForTag(tag));
 
@@ -162,17 +164,18 @@ public class TextWrapper {
 
 
                     String src = tag.props.get("src");
-                    U.v(src);
                     WebView view = new WebView(inf.getContext());
 
                     view.getSettings().setJavaScriptEnabled(true);
+                    view.setBackgroundColor(Color.TRANSPARENT);
                     view.getSettings().setPluginState(WebSettings.PluginState.ON);
-
                     view.loadUrl(src);
                     view.setWebChromeClient(new WebChromeClient());
 
-
-                    view.setLayoutParams(new LinearLayout.LayoutParams((int) (ImageLoader.lim_x * 0.7f), ImageLoader.lim_x / 2));
+                    view.setLayoutParams(new LinearLayout.LayoutParams(
+                            (int) (ImageLoader.lim_x * 0.7f),
+                            ImageLoader.lim_x / 2
+                    ));
                     out.add(view);
 
                     currently_parsing = parser.tags.get(parser.getClosingTag(parser.getIndexForTag(tag))).end;
@@ -190,6 +193,36 @@ public class TextWrapper {
                     out.add(pre);
 
                     currently_parsing = parser.tags.get(parser.getClosingTag(parser.getIndexForTag(tag))).end;
+                }
+
+                // Обработка гифок.
+                if (
+                        "img".equals(tag.name) &&
+                                tag.props.containsKey("title") &&
+                                tag.get("title").equals("animated")
+                        ) {
+
+                    if (currently_parsing < tag.start)
+                        out.add(wrapText(inf, text.substring(currently_parsing, tag.start), twel));
+
+
+                    String src = tag.get("src");
+                    WebView view = new WebView(inf.getContext());
+
+                    view.loadUrl(src);
+                    view.setWebChromeClient(new WebChromeClient());
+                    view.getSettings().setSupportZoom(false);
+
+//                    view.setInitialScale((int) (((float) ImageLoader.lim_x / w) * 100));
+                    view.setInitialScale(70);
+                    view.setBackgroundColor(Color.TRANSPARENT);
+                    view.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    out.add(view);
+
+                    currently_parsing = tag.end;
                 }
 
             } catch (Throwable t) {
@@ -269,7 +302,6 @@ public class TextWrapper {
             final int start = target.getSpanStart(span);
             final int end = target.getSpanEnd(span);
             final String source = span.getSource();
-//            target.removeSpan(span);
 
             ImageSpan replacer = new ImageSpan(subtarget.getContext(), R.drawable.no_image);
 
