@@ -26,8 +26,8 @@ import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 import everypony.sweetieBot.other.ImageLoader;
 import org.xml.sax.XMLReader;
-
 import java.util.Vector;
+
 
 /**
  * Оборачивает html во View.
@@ -36,7 +36,7 @@ import java.util.Vector;
  */
 public class TextWrapper {
     public static boolean isPicsDownloading = true;
-    public static boolean isGIFsDownloading = false;
+    public static boolean isGIFsDownloading = true;
 
     /**
      * TextWrappingEventListener
