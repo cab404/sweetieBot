@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.cab404.libtabun.U;
 import com.cab404.libtabun.parts.Blog;
 import com.cab404.libtabun.parts.PaWPoL;
+import com.cab404.libtabun.util.SU;
+import com.cab404.libtabun.util.U;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.activities.PostActivity;
 import everypony.sweetieBot.other.ImageLoader;
@@ -180,7 +181,7 @@ public class PostWrapper {
             post.tasks.clear();
 
             date.setText(post.label.time);
-            tags.setText("Теги: " + U.join(post.label.tags, ", "));
+            tags.setText("Теги: " + SU.join(post.label.tags, ", "));
             title.setText(everypony.sweetieBot.U.deEntity(post.label.name));
             votes.setText(post.label.votes);
             author.setText(post.label.author.nick);

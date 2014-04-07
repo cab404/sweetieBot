@@ -82,7 +82,7 @@ public class PostActivity extends MultitaskingActivity {
         if (getIntent().getAction().equals("post-direct")) {
             post_id = getIntent().getIntExtra("post-id", -1);
         } else {
-            post_id = Integer.parseInt(com.cab404.libtabun.U.bsub(getIntent().getData().toString(), "/", ".html"));
+            post_id = Integer.parseInt(com.cab404.libtabun.util.SU.bsub(getIntent().getData().toString(), "/", ".html"));
         }
         id = post_id;
 
@@ -208,14 +208,14 @@ public class PostActivity extends MultitaskingActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (loaded)
-                    update(false);
+                    update(false, false);
             }
         });
 
         update.setOnLongClickListener(new View.OnLongClickListener() {
             @Override public boolean onLongClick(View v) {
                 if (loaded) {
-                    update(true);
+                    update(true, false);
                     return true;
                 }
                 return false;
@@ -241,11 +241,11 @@ public class PostActivity extends MultitaskingActivity {
             @Override public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 11) {
                     ClipboardManager man = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    man.setPrimaryClip(ClipData.newPlainText(post.name, "http://" + com.cab404.libtabun.U.path + "/blog/" + post.id + ".html"));
+                    man.setPrimaryClip(ClipData.newPlainText(post.name, "http://" + com.cab404.libtabun.util.U.path + "/blog/" + post.id + ".html"));
                 } else {
                     @SuppressWarnings("deprecation")
                     android.text.ClipboardManager old = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    old.setText("http://" + com.cab404.libtabun.U.path + "/blog/" + post.id + ".html");
+                    old.setText("http://" + com.cab404.libtabun.util.U.path + "/blog/" + post.id + ".html");
                 }
                 U.showOkToast("Eeyup.", "URL поста скопирован в буфер обмена.", getBaseContext());
                 closeDrawer();
@@ -291,16 +291,21 @@ public class PostActivity extends MultitaskingActivity {
     private boolean __update_lock = false;
     private ArrayList<Integer> scroll;
 
-    private void update(boolean force) {
+    private void update(boolean force, boolean added_comment) {
         if (!__update_lock) {
             setNewCommentsNum(scroll.size());
-            if (scroll.size() == 0 || force) {
-//                comments.removeAllNew();
+            if (scroll.size() == 0 || force || added_comment) {
+
+                if (force) {
+                    comments.removeAllNew();
+                    scroll.clear();
+                }
+
                 __update_lock = true;
-//                scroll.clear();
 
                 if (U.SDK >= 12)
                     update.animate().rotationBy(180).setListener(new LoopListener());
+
                 addTask(new UpdateComments().execute());
 
             } else {
@@ -313,6 +318,8 @@ public class PostActivity extends MultitaskingActivity {
 
                 int id = comments.getIndexByID(scroll.remove(0));
                 comments.get(id).comment.is_new = false;
+                comments.get(id).clearCache();
+                comments.notifyDataSetChanged();
 
                 if (insta_scroll)
                     list.setSelection(id + 1);
@@ -430,7 +437,6 @@ public class PostActivity extends MultitaskingActivity {
                                 }
                             }
                         }
-
                 );
             } catch (NullPointerException e) {
                 U.e("Нет соединения!");
@@ -593,7 +599,8 @@ public class PostActivity extends MultitaskingActivity {
                             Math.max(
                                     U.res.getDisplayMetrics().heightPixels,
                                     U.res.getDisplayMetrics().widthPixels) / 2
-                    ));
+                    )
+            );
             space.setBackgroundColor(U.res.getColor(R.color.Text_Default_White));
             list.addFooterView(space);
 
@@ -760,7 +767,7 @@ public class PostActivity extends MultitaskingActivity {
 
             comment_bar.findViewById(R.id.text).setEnabled(true);
             if (!err) {
-                update(true);
+                update(false, true);
                 ((EditText) comment_bar.findViewById(R.id.text)).setText("");
             } else {
                 U.showOkToast("Что-то пошло не так!", "Комментарий не отправлен!", getApplicationContext());

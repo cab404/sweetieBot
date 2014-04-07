@@ -42,7 +42,7 @@ public class ImageLoader {
      * куда меньше вероятность Timeout-а, но вся цепочка может остановится
      * на каком-нибудь огромном арте.
      */
-    public static boolean is_Multi_thread = false;
+    public static boolean is_Multi_thread = true;
     public static int retries = 10, timeout = 5000;
     protected static ArrayList<LoadingTask> taskQueue;
     protected static WeakHashMap<String, LoadingImage> cache;

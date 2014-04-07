@@ -11,11 +11,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import com.cab404.libtabun.facility.HTMLParser;
 import com.cab404.libtabun.parts.Blog;
 import com.cab404.libtabun.parts.BlogList;
 import com.cab404.libtabun.parts.PaWPoL;
 import com.cab404.libtabun.parts.UserInfo;
+import com.cab404.libtabun.util.html_parser.HTMLParser;
+import com.cab404.libtabun.util.html_parser.Tag;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 import everypony.sweetieBot.other.ImageLoader;
@@ -152,7 +153,7 @@ public class Home extends MultitaskingActivity {
                 @Override public boolean onQueryTextSubmit(String query) {
                     content_list.setAdapter(null);
                     search_bar.clearFocus();
-                    AsyncTask task = new GetPage().execute("/search/topics/?q=" + com.cab404.libtabun.U.rl(search_bar.getQuery() + "") + "&/");
+                    AsyncTask task = new GetPage().execute("/search/topics/?q=" + com.cab404.libtabun.util.SU.rl(search_bar.getQuery() + "") + "&/");
                     addTask(task);
                     return true;
                 }
@@ -239,7 +240,7 @@ public class Home extends MultitaskingActivity {
 
                 if (blogs == null) continue;
 
-                for (HTMLParser.Tag blog : blogs.getAllTagsByName("a")) {
+                for (Tag blog : blogs.getAllTagsByName("a")) {
                     if (blog.isClosing) continue;
                     String name = blogs.getContents(blog);
                     String link = blog.props.get("href").replaceFirst("\\Qhttp://tabun.everypony.ru\\E", "");

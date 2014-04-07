@@ -29,7 +29,7 @@ public class UserActivity extends Activity {
         if ("PROFILE".equals(getIntent().getAction())) {
             extractedNick = String.valueOf(getIntent().getData());
         } else {
-            extractedNick = com.cab404.libtabun.U.sub(String.valueOf(getIntent().getData()), "profile/", "/");
+            extractedNick = com.cab404.libtabun.util.SU.sub(String.valueOf(getIntent().getData()), "profile/", "/");
         }
 
         if (U.user == null) {

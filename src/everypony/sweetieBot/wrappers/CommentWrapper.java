@@ -136,7 +136,7 @@ public class CommentWrapper {
                 old.findViewById(R.id.comment_body).setBackgroundColor(U.res.getColor(R.color.Text_Default_White));
 
             if (comment.views == null)
-                comment.views = TextWrapper.wrap(comment.comment.body, content, new TextWrapperListenerImpl());
+                comment.views = TextWrapper.wrap(comment.comment.body.trim(), content, new TextWrapperListenerImpl());
             TextWrapper.insert(content, comment.views);
 
             String avatar_url = comment.comment.avatar.replace("24x24", "48x48");

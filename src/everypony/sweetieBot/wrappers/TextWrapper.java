@@ -19,7 +19,8 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.cab404.libtabun.facility.HTMLParser;
+import com.cab404.libtabun.util.html_parser.HTMLParser;
+import com.cab404.libtabun.util.html_parser.Tag;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 import everypony.sweetieBot.other.ImageLoader;
@@ -82,7 +83,7 @@ public class TextWrapper {
         //     Do a spoiler roll!
         //
         int sublevel = level;
-        for (HTMLParser.Tag tag : parser.tags) {
+        for (Tag tag : parser.tags) {
             if (!tag.isStandalone) {
                 if (tag.isClosing) level--;
                 else level++;
