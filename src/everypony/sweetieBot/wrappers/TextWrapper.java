@@ -36,6 +36,7 @@ import java.util.Vector;
  */
 public class TextWrapper {
     public static boolean isPicsDownloading = true;
+    public static boolean isGIFsDownloading = false;
 
     /**
      * TextWrappingEventListener
@@ -196,10 +197,10 @@ public class TextWrapper {
                 }
 
                 // Обработка гифок.
-                if (
+                if (isGIFsDownloading &&
                         "img".equals(tag.name) &&
-                                tag.props.containsKey("title") &&
-                                tag.get("title").equals("animated")
+                        tag.props.containsKey("title") &&
+                        tag.get("title").equals("animated")
                         ) {
 
                     if (currently_parsing < tag.start)

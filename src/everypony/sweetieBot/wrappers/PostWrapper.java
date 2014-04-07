@@ -181,7 +181,13 @@ public class PostWrapper {
             post.tasks.clear();
 
             date.setText(post.label.time);
-            tags.setText("Теги: " + SU.join(post.label.tags, ", "));
+
+            StringBuilder tags_joined = new StringBuilder();
+            for (String str : post.label.tags)
+                tags_joined.append(SU.deEntity(str)).append(", ");
+            tags_joined.delete(tags_joined.length() - 2, tags_joined.length());
+
+            tags.setText("Теги: " + tags_joined.toString());
             title.setText(everypony.sweetieBot.U.deEntity(post.label.name));
             votes.setText(post.label.votes);
             author.setText(post.label.author.nick);

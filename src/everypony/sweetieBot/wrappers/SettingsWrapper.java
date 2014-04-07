@@ -42,6 +42,20 @@ public class SettingsWrapper {
 
         settings.add(new Map.Entry<String, Boolean>() {
             @Override public String getKey() {
+                return "Загрузка gif-анимации";
+            }
+            @Override public Boolean getValue() {
+                return TextWrapper.isGIFsDownloading;
+            }
+            @Override public Boolean setValue(Boolean object) {
+                TextWrapper.isGIFsDownloading = object;
+                SettingsAdapter.write();
+                return TextWrapper.isGIFsDownloading;
+            }
+        });
+
+        settings.add(new Map.Entry<String, Boolean>() {
+            @Override public String getKey() {
                 return "Многопоточная загрузка (для быстрого соединения)";
             }
             @Override public Boolean getValue() {

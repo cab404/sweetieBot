@@ -3,7 +3,7 @@
           package="everypony.sweetieBot"
           android:installLocation="preferExternal"
           android:versionCode="84"
-          android:versionName="2.4 (e84391adc21c)"
+          android:versionName="2.4 (1725b5ec452c)"
         >
 
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19"/>
