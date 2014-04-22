@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="everypony.sweetieBot"
           android:installLocation="preferExternal"
-          android:versionCode="84"
-          android:versionName="2.4 (1725b5ec452c)"
+          android:versionCode="85"
+          android:versionName="2.4.1 (12a997f5fd01)"
         >
 
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19"/>
@@ -46,23 +46,6 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-
-
-        <!---->
-        <!-- Окно регистрации -->
-        <!---->
-
-        <activity android:theme="@android:style/Theme.Holo.NoActionBar"
-                  android:name=".activities.Authentication"
-                  android:label="@string/label"
-                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-                >
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-
         </activity>
 
 
@@ -133,28 +116,24 @@
         </activity>
 
 
-        <!---->
-        <!-- Сервис аутентификации -->
-        <!---->
-        <service
-                android:permission="android.permission.AUTHENTICATE_ACCOUNTS"
-                android:name=".authentication.AuthService"
-                android:label="@string/label"
-                android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-                >
+        <activity android:name=".activities.AboutActivity"/>
 
+        <!--Tabun.Auth-->
+        <activity android:name="everypony.tabun.auth.TabunAccountSelector" />
+        <activity android:name="everypony.tabun.auth.TabunAuthActivity"/>
+        <activity android:name="everypony.tabun.auth.TabunTokenGetterActivity"/>
+        <service android:name="everypony.tabun.auth.TabunAuthService"
+                 android:permission="android.permission.AUTHENTICATE_ACCOUNTS">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
-
             <meta-data
-                    android:label="@string/app_name"
+                    android:label="@string/label"
                     android:name="android.accounts.AccountAuthenticator"
-                    android:resource="@xml/account"
+                    android:resource="@xml/tabun"
                     />
         </service>
 
-        <activity android:name=".activities.AboutActivity"/>
 
     </application>
 

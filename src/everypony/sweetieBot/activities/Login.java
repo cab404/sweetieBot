@@ -1,112 +1,70 @@
 package everypony.sweetieBot.activities;
 
 import android.app.Activity;
-import android.net.ConnectivityManager;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
+import com.cab404.libtabun.pages.TabunPage;
 import com.cab404.libtabun.parts.User;
-import everypony.sweetieBot.R;
+import com.cab404.libtabun.parts.UserInfo;
+import com.cab404.libtabun.util.SU;
+import com.cab404.moonlight.framework.AccessProfile;
 import everypony.sweetieBot.U;
-import everypony.sweetieBot.wrappers.UserWrapper;
-
-import java.util.ArrayList;
+import everypony.tabun.auth.TabunAccount;
+import everypony.tabun.auth.TabunTokenGetterActivity;
 
 /**
  * Входит за юзера или дает вариант войти readonly.
  */
 public class Login extends Activity {
+
+    private static final int TOKEN_REQUEST_CODE = 42;
+
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(android.R.style.Theme_Holo_Dialog);
-        setContentView(R.layout.account_list);
+        // Пайпим.
+        startActivityForResult(new Intent(this, TabunTokenGetterActivity.class), TOKEN_REQUEST_CODE);
+    }
 
-        // Проверяем Интернеты
-        ConnectivityManager activeNetworkInfo = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        if (activeNetworkInfo.getActiveNetworkInfo() == null || !activeNetworkInfo.getActiveNetworkInfo().isAvailable()) {
-            U.showOkToast(
-                    "Нет подключения к сети!",
-                    "Приложение не может работать без Интернета."
-                    , this);
-            setResult(1);
-            finish();
-            return;
-        }
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        {
-            // Достаём аккаунт. Делаем это в отдельном блоке,
-            // дабы отправить открытый текст в небытие поскорее.
-            // Итак security breach-ей не сосчитать.
-            ArrayList<UserWrapper.UserAuthenticator.AuthData> accounts = Authentication.getAccountList(this);
-            if (accounts.size() > 0)
-                new UserWrapper.UserAuthenticator() {
-                    @Override public void onPostExecute(User auth) {
-                        U.user = auth;
-                        if (U.user != null && U.user.isLoggedIn()) {
-                            ok();
-                        } else {
-                            network_error();
-                        }
+        if (requestCode == 42) {
+            if (resultCode == RESULT_OK) {
+                final String token = data.getStringExtra(TabunAccount.COOKIE_TOKEN_TYPE);
+                U.v(token);
+                new AsyncTask<Void, Void, Void>() {
+                    @Override protected Void doInBackground(Void... voids) {
+                        U.user = new User(SU.sub(token, "PHPSESSID=", ";"));
+                        U.user.isLoggedIn = true;
+
+                        AccessProfile profile = AccessProfile.parseString(token);
+                        TabunPage page = new TabunPage();
+                        page.fetch(profile);
+
+
+                        U.user_info = new UserInfo(U.user, page.c_inf.username);
+                        return null;
                     }
-                }.execute(accounts.get(0));
-            else {
-                setContentView(R.layout.login_type);
-                final Activity translate_this = this;
-
-                findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
-                        Authentication.startAccountCreation(translate_this);
-                        setResult(2);
+                    @Override protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
                         finish();
                     }
-                });
-
-                findViewById(R.id.readonly).setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
-                        new AsyncTask<Void, Void, User>() {
-                            @Override protected User doInBackground(Void... params) {
-                                try {
-                                    U.user = new User();
-                                } catch (NullPointerException ex) {
-                                    return null;
-                                }
-                                return U.user;
-                            }
-
-                            @Override protected void onPostExecute(User user) {
-                                if (user == null) network_error();
-                                else ok();
-                            }
-                        }.execute();
-                        setContentView(R.layout.account_list);
+                }.execute();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                new AsyncTask<Void, Void, Void>() {
+                    @Override protected Void doInBackground(Void... voids) {
+                        U.user = new User();
+                        return null;
                     }
-                });
+                    @Override protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        finish();
+                    }
+                }.execute();
             }
         }
-        // Перестрахуемся.
-        System.gc();
-    }
-
-    private void network_error() {
-        U.showOkToast(
-                "Не удалось подключится.",
-                "Если вы меняли пароль - удалите аккаунт и создайте заново. \n" +
-                        "Но скорее всего, Табун упал. \n" +
-                        "С ним иногда бывает, но его починят.\n" +
-                        "Еще иногда такое бывает, когда на двух компьютерах входят одновременно.\n" +
-                        "А еще, может быть, просто интернет слишком медленный.\n" +
-                        "И вообще, что я тут вам рассказываю?\n"
-                , getApplicationContext());
-        setResult(1);
-        finish();
-    }
-
-    private void ok() {
-        U.showOkToast(
-                "Подключение установлено!",
-                U.user.getLogin()
-                , getApplicationContext());
-        setResult(0);
-        finish();
     }
 }
