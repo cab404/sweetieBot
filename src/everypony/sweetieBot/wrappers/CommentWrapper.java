@@ -185,7 +185,7 @@ public class CommentWrapper {
             ImageView reply = (ImageView) actions.findViewById(R.id.reply);
             ImageView edit = (ImageView) actions.findViewById(R.id.edit);
 
-            if (U.user.isLoggedIn() && U.user.getLogin().equals(comment.comment.author)) {
+            if (U.user.isLoggedIn() && U.user_info.nick.equals(comment.comment.author)) {
                 edit.setVisibility(View.VISIBLE);
                 edit.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {

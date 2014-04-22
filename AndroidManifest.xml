@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="everypony.sweetieBot"
           android:installLocation="preferExternal"
-          android:versionCode="85"
-          android:versionName="2.4.1 (12a997f5fd01)"
+          android:versionCode="86"
+          android:versionName="2.4.2 (b70fd1acbf28)"
         >
 
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19"/>
