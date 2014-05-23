@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.*;
 import android.widget.ImageView;
@@ -209,7 +210,7 @@ public class Home extends MultitaskingActivity {
         // Закидываем небольшую страничку с блогами.
         nav_adapter.labels.add(new ListLink("Блоги") {
             @Override void onInvoke() {
-                drawer.closeDrawer(Gravity.START);
+                drawer.closeDrawer(GravityCompat.START);
                 final BlogWrapper.BlogListWrapper wrapper = new BlogWrapper.BlogListWrapper() {
                     @Override public void onItemClick(BlogList.BlogLabel blog_url) {
                         new PageLink(blog_url.name, "/blog/" + blog_url.url_name + "/").onInvoke();
@@ -243,7 +244,7 @@ public class Home extends MultitaskingActivity {
                 for (Tag blog : blogs.getAllTagsByName("a")) {
                     if (blog.isClosing) continue;
                     String name = blogs.getContents(blog);
-                    String link = blog.props.get("href").replaceFirst("\\Qhttp://tabun.everypony.ru\\E", "");
+                    String link = blog.props.get("href").substring("http://tabun.everypony.ru".length());
                     nav_adapter.labels.add(new PageLink(name, link));
                 }
             }
@@ -267,7 +268,7 @@ public class Home extends MultitaskingActivity {
 
     private void onSettingsInvoked() {
         content_list.setAdapter(new SettingsWrapper.SettingsAdapter());
-        drawer.closeDrawer(Gravity.START);
+        drawer.closeDrawer(GravityCompat.START);
         ((TextView) action_bar_view.findViewById(R.id.title)).setText("Настройки");
     }
 
@@ -368,7 +369,7 @@ public class Home extends MultitaskingActivity {
         }
 
         @Override void onInvoke() {
-            drawer.closeDrawer(Gravity.START);
+            drawer.closeDrawer(GravityCompat.START);
             ImageLoader.dropTasks();
             AsyncTask task = new GetPage() {
                 @Override protected void onPostExecute(Blog blog) {
