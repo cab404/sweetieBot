@@ -9,7 +9,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.cab404.libtabun.parts.Comment;
+import com.cab404.libtabun.data.Comment;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 import everypony.sweetieBot.other.ImageLoader;
@@ -107,7 +107,7 @@ public class CommentWrapper {
             if (view == null || view.findViewById(R.id.avatar) == null)
                 view = inflater.inflate(R.layout.comment, group, false);
 
-            if (tree.get(i).comment.MODERASTIA) {
+            if (tree.get(i).comment.deleted) {
                 view = inflater.inflate(R.layout.dead_comment, group, false);
             } else
                 convert(tree.get(i), view);
@@ -136,10 +136,10 @@ public class CommentWrapper {
                 old.findViewById(R.id.comment_body).setBackgroundColor(U.res.getColor(R.color.Text_Default_White));
 
             if (comment.views == null)
-                comment.views = TextWrapper.wrap(comment.comment.body.trim(), content, new TextWrapperListenerImpl());
+                comment.views = TextWrapper.wrap(comment.comment.text, content, new TextWrapperListenerImpl());
             TextWrapper.insert(content, comment.views);
 
-            String avatar_url = comment.comment.avatar.replace("24x24", "48x48");
+            String avatar_url = comment.comment.author.mid_icon;
             ImageLoader.InsertIntoView job = new ImageLoader.InsertIntoView(avatar);
             AsyncTask task = ImageLoader.loadImage(avatar_url, job);
             if (task != null) {
@@ -150,7 +150,7 @@ public class CommentWrapper {
 
             author.setText(String.valueOf(comment.comment.author));
             vote.setText(String.valueOf(comment.comment.votes));
-            date.setText(String.valueOf(comment.comment.time));
+            date.setText(String.valueOf(comment.comment.date));
 
             if (comment.comment.votes > 0)
                 vote.setTextColor(everypony.sweetieBot.U.res.getColor(R.color.Text_Green));
@@ -185,7 +185,7 @@ public class CommentWrapper {
             ImageView reply = (ImageView) actions.findViewById(R.id.reply);
             ImageView edit = (ImageView) actions.findViewById(R.id.edit);
 
-            if (U.user.isLoggedIn() && U.user_info.nick.equals(comment.comment.author)) {
+            if (U.isLoggedIn() && U.user_info.login.equals(comment.comment.author.login)) {
                 edit.setVisibility(View.VISIBLE);
                 edit.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {

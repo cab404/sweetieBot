@@ -6,11 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.cab404.libtabun.parts.User;
-import com.cab404.libtabun.parts.UserInfo;
+import com.cab404.libtabun.data.Profile;
+import com.cab404.libtabun.pages.ProfilePage;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -22,55 +23,16 @@ import java.util.Vector;
  */
 public class UserWrapper {
 
-    public static abstract class UserAuthenticator extends AsyncTask<UserAuthenticator.AuthData, Void, User> {
-
-        /**
-         * Содержит логин и пароль пользователя, класс для удобства запихивания аккаунтов в массивы.
-         */
-        public static class AuthData {
-            private String login, password;
-
-            /**
-             * Возвращает логин пользователя.
-             */
-            public String getLogin() {
-                return login;
-            }
-
-            public AuthData(String login, String password) {
-                this.login = login;
-                this.password = password;
-            }
-        }
-
-        @Override
-        protected User doInBackground(AuthData... params) {
-            try {
-                if (params[0].login.contains("@")) return null; // Шлём юзеров с e-mail в круп.
-                User user = new User(params[0].login, params[0].password);
-                U.user_info = new UserInfo(user);
-                return user;
-            } catch (NullPointerException ex) {
-                U.e(ex);
-                return null;
-            }
-        }
-
-        /**
-         * Что делать, кода юзера нашли?
-         *
-         * @param user Юзер, которого нашли и аутентифицировали. Или null, если не нашли.
-         */
-        @Override public abstract void onPostExecute(User user);
-    }
-
     /**
      * Доставалка информации о юзере.
      */
-    public static abstract class UserInfoGetter extends AsyncTask<String, Void, UserInfo> {
-        @Override protected UserInfo doInBackground(String... params) {
+    public static abstract class UserInfoGetter extends AsyncTask<String, Void, Profile> {
+        @Override protected Profile doInBackground(String... params) {
             try {
-                return new UserInfo(U.user, params[0]);
+                ProfilePage page = new ProfilePage(params[0]);
+                page.fetch(U.user);
+
+                return page.user_info;
             } catch (Throwable t) {
                 U.e(t);
                 return null;
@@ -84,14 +46,14 @@ public class UserWrapper {
     public static class UserInfoWrapper extends U.FixedAdapter {
         List<Map.Entry<String, String>> info_list;
 
-        public UserInfoWrapper(UserInfo info) {
+        public UserInfoWrapper(Profile info) {
             info_list = new Vector<>();
 
-            for (Map.Entry<String, String> entry : info.personal) {
-                info_list.add(entry);
+            for (Map.Entry<Profile.UserInfoType, String> entry : info.personal.entrySet()) {
+                info_list.add(new AbstractMap.SimpleEntry<>(entry.getKey().name, entry.getValue()));
             }
-            for (Map.Entry<String, String> entry : info.contacts) {
-                info_list.add(entry);
+            for (Map.Entry<Profile.ContactType, String> entry : info.contacts.entrySet()) {
+                info_list.add(new AbstractMap.SimpleEntry<>(entry.getKey().name, entry.getValue()));
             }
         }
 

@@ -20,12 +20,13 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.cab404.libtabun.util.html_parser.HTMLParser;
-import com.cab404.libtabun.util.html_parser.Tag;
+import com.cab404.moonlight.parser.HTMLTree;
+import com.cab404.moonlight.parser.Tag;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 import everypony.sweetieBot.other.ImageLoader;
 import org.xml.sax.XMLReader;
+
 import java.util.Vector;
 
 
@@ -76,7 +77,7 @@ public class TextWrapper {
      * @see TextWrapper#insert Как быстро вставлять этот массив Viewшек в LinearLayout
      */
     private static Vector<View> wrap(LayoutInflater inf, String text, TWEL twel, int level) {
-        HTMLParser parser = new HTMLParser(text);
+        HTMLTree parser = new HTMLTree(text);
         Vector<View> out = new Vector<>();
 
         int currently_parsing = 0;
@@ -85,16 +86,17 @@ public class TextWrapper {
         //     Do a spoiler roll!
         //
         int sublevel = level;
-        for (Tag tag : parser.tags) {
-            if (!tag.isStandalone) {
-                if (tag.isClosing) level--;
-                else level++;
-            }
+        for (Tag tag : parser) {
+            if (tag.isClosing()) level--;
+            else level++;
+
             try {
 //                if ("img".equals(tag.name)) U.v(level - 1 + ":" + sublevel + ":" + tag.get("src"));
-                if (level - (tag.isStandalone ? 0 : 1) != sublevel) continue;
+
+                if (level - (tag.isStandalone() ? 0 : 1) != sublevel) continue;
+
                 if ("spoiler".equals(tag.props.get("class"))) {
-                    HTMLParser spoiler = parser.getParserForIndex(parser.getIndexForTag(tag));
+                    HTMLTree spoiler = parser.getTree(tag);
 
                     // Проверяем на повторную обработку.
 
@@ -127,8 +129,8 @@ public class TextWrapper {
                     spoiler_view.updateViewLayout(content, content.getLayoutParams());
 
                     // Находим тайтл и контент спойлера
-                    String str_title = spoiler.getContents(spoiler.getTagIndexByProperty("class", "spoiler-title"));
-                    String str_content = spoiler.getContents(spoiler.getTagIndexByProperty("class", "spoiler-body"));
+                    String str_title = spoiler.getContents(spoiler.xPathFirstTag("*&class=spoiler-title"));
+                    String str_content = spoiler.getContents(spoiler.xPathFirstTag("*&class=spoiler-body"));
 
                     // Слушалка нажатий по заголовку
                     SpoilerHeaderListener listener = new SpoilerHeaderListener();
@@ -154,11 +156,11 @@ public class TextWrapper {
                     // ...и пихаем спойлер на место
                     out.add(spoiler_view);
 
-                    // Не должно быть никаких ошибок в тегах, Табун проверяет.
-                    currently_parsing = parser.tags.get(parser.getClosingTag(parser.getIndexForTag(tag))).end;
+                    // Не должно быть никаких ошибок в тегах комментария, хотя бы это Табун проверяет.
+                    currently_parsing = parser.get(parser.getClosingTag(tag)).end;
                 }
                 // Обработка видео
-                if ("iframe".equals(tag.name) && !tag.isClosing) {
+                if ("iframe".equals(tag.name) && !tag.isClosing()) {
 
                     if (currently_parsing < tag.start)
                         out.add(wrapText(inf, text.substring(currently_parsing, tag.start), twel));
@@ -179,11 +181,11 @@ public class TextWrapper {
                     ));
                     out.add(view);
 
-                    currently_parsing = parser.tags.get(parser.getClosingTag(parser.getIndexForTag(tag))).end;
+                    currently_parsing = parser.get(parser.getClosingTag(tag)).end;
                 }
 
                 // Обработка кода
-                if ("pre".equals(tag.name) && !tag.isClosing) {
+                if ("pre".equals(tag.name) && !tag.isClosing()) {
 
                     if (currently_parsing < tag.start)
                         out.add(wrapText(inf, text.substring(currently_parsing, tag.start), twel));
@@ -193,7 +195,7 @@ public class TextWrapper {
                     ((TextView) pre.findViewById(R.id.content)).setText(U.deEntity(code));
                     out.add(pre);
 
-                    currently_parsing = parser.tags.get(parser.getClosingTag(parser.getIndexForTag(tag))).end;
+                    currently_parsing = parser.get(parser.getClosingTag(tag)).end;
                 }
 
                 // Обработка гифок.
@@ -234,7 +236,10 @@ public class TextWrapper {
 
         // Нарезка текста на куски (тут кусок после спойлера пихается в шредер).
 
-        out.add(wrapText(inf, text.substring(currently_parsing), twel));
+        out.add(
+                wrapText(inf, text.substring(currently_parsing), twel
+                )
+        );
 
         return out;
     }

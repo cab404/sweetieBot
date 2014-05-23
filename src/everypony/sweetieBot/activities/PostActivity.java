@@ -10,13 +10,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
-import com.cab404.libtabun.parts.Comment;
-import com.cab404.libtabun.parts.Post;
+import com.cab404.libtabun.data.Comment;
+import com.cab404.libtabun.data.Topic;
+import com.cab404.libtabun.data.Types;
+import com.cab404.libtabun.pages.TopicPage;
+import com.cab404.libtabun.requests.CommentAddRequest;
+import com.cab404.libtabun.requests.VoteRequest;
+import com.cab404.moonlight.util.SU;
+import com.cab404.moonlight.util.exceptions.MoonlightFail;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 import everypony.sweetieBot.other.MultitaskingActivity;
@@ -51,7 +58,8 @@ public class PostActivity extends MultitaskingActivity {
     boolean loaded = false;
 
     // Инфа о посте. id - полученное при старте значение.
-    Post post;
+    Topic post;
+    TopicPage page;
     int id;
 
     static String[] reply_to;
@@ -82,7 +90,7 @@ public class PostActivity extends MultitaskingActivity {
         if (getIntent().getAction().equals("post-direct")) {
             post_id = getIntent().getIntExtra("post-id", -1);
         } else {
-            post_id = Integer.parseInt(com.cab404.libtabun.util.SU.bsub(getIntent().getData().toString(), "/", ".html"));
+            post_id = Integer.parseInt(SU.bsub(getIntent().getData().toString(), "/", ".html"));
         }
         id = post_id;
 
@@ -109,7 +117,7 @@ public class PostActivity extends MultitaskingActivity {
 
                 setCommentonatorTo("Редактируем свои ошибки.");
 
-                ((TextView) comment_bar.findViewById(R.id.text)).setText(comment.body.trim());
+                ((TextView) comment_bar.findViewById(R.id.text)).setText(comment.text);
                 comment_bar.findViewById(R.id.text).requestFocus();
             }
 
@@ -241,11 +249,11 @@ public class PostActivity extends MultitaskingActivity {
             @Override public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 11) {
                     ClipboardManager man = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    man.setPrimaryClip(ClipData.newPlainText(post.name, "http://" + com.cab404.libtabun.util.U.path + "/blog/" + post.id + ".html"));
+                    man.setPrimaryClip(ClipData.newPlainText(post.title, "http://" + U.user.getHost() + "/blog/" + post.id + ".html"));
                 } else {
                     @SuppressWarnings("deprecation")
                     android.text.ClipboardManager old = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    old.setText("http://" + com.cab404.libtabun.util.U.path + "/blog/" + post.id + ".html");
+                    old.setText("http://" + U.user.getHost() + "/blog/" + post.id + ".html");
                 }
                 U.showOkToast("Eeyup.", "URL поста скопирован в буфер обмена.", getBaseContext());
                 closeDrawer();
@@ -402,10 +410,10 @@ public class PostActivity extends MultitaskingActivity {
                 list.setAdapter(comments);
                 synchronizeHeader();
 
-                if (post.isInFavs)
+                if (post.in_favourites)
                     fav.setImageDrawable(U.res.getDrawable(R.drawable.favourites_active));
 
-                if (!post.vote_enabled || !U.user.isLoggedIn()) {
+                if (!post.vote_enabled || !U.isLoggedIn()) {
                     if (post.your_vote == 1) vote.setImageDrawable(U.res.getDrawable(R.drawable.rate_up));
                     if (post.your_vote == 0) vote.setImageDrawable(U.res.getDrawable(R.drawable.rate_active));
                     if (post.your_vote == -1) vote.setImageDrawable(U.res.getDrawable(R.drawable.rate_down));
@@ -422,24 +430,23 @@ public class PostActivity extends MultitaskingActivity {
         }
 
         @Override protected Void doInBackground(Void... params) {
-            post = new Post(U.user, id);
             try {
-                post.initialFetch(U.user,
-                        new Post.LoadingEventListener() {
-                            @Override public void onLoadingEvent(Post.PartType partType, Object part) {
-                                switch (partType) {
-                                    case COMMENT:
-                                        publishProgress((Comment) part, null);
-                                        break;
-                                    case HEADER:
-                                        publishProgress(null, null);
-                                        break;
-                                }
-                            }
+                page = new TopicPage(id) {
+                    @Override public void handle(Object object, int key) {
+                        super.handle(object, key);
+                        switch (key) {
+                            case BLOCK_COMMENT:
+                                publishProgress((Comment) object, null);
+                                break;
+                            case BLOCK_TOPIC_HEADER:
+                                publishProgress(null, null);
+                                break;
                         }
-                );
-            } catch (NullPointerException e) {
-                U.e("Нет соединения!");
+                    }
+                };
+                page.fetch(U.user);
+            } catch (MoonlightFail e) {
+                Log.e("Luna Log", "Ошибка Moonlight!", e);
             }
 
             return null;
@@ -608,7 +615,7 @@ public class PostActivity extends MultitaskingActivity {
 //            comment_bar.setY(U.res.getDisplayMetrics().heightPixels);
 
             // И в конце концов, включаем действия.
-            if (U.user.isLoggedIn())
+            if (U.isLoggedIn())
                 loaded = true;
         }
     }
@@ -624,15 +631,15 @@ public class PostActivity extends MultitaskingActivity {
         }
 
         @Override protected Void doInBackground(Void... params) {
-            try {
-                post.fetchNewComments(U.user, new Post.CommentListener() {
-                    @Override public void onCommentLoad(Comment comment) {
-                        publishProgress(comment);
-                    }
-                });
-            } catch (Exception ex) {
-                U.v("Timeout while updating comments");
-            }
+//            try {
+//                post.fetchNewComments(U.user, new Post.CommentListener() {
+//                    @Override public void onCommentLoad(Comment comment) {
+//                        publishProgress(comment);
+//                    }
+//                });
+//            } catch (Exception ex) {
+//                U.v("Timeout while updating comments");
+//            }
             __update_lock = false;
             return null;
         }
@@ -645,8 +652,7 @@ public class PostActivity extends MultitaskingActivity {
 
         @Override protected Boolean doInBackground(Integer... params) {
             int vote = params[0];
-
-            return post.voteForPost(U.user, vote);
+            return new VoteRequest(post.id, vote, Types.TOPIC).exec(U.user, page).success();
         }
 
         @Override protected void onPostExecute(Boolean err) {
@@ -667,19 +673,20 @@ public class PostActivity extends MultitaskingActivity {
     private class ToggleFavs extends AsyncTask<Void, Void, Void> {
 
         @Override protected Void doInBackground(Void... params) {
-            boolean err;
-            if (post.isInFavs)
-                err = U.user.removeFromFavs(post);
-            else
-                err = U.user.addToFavs(post);
-
-            if (!err)
-                post.isInFavs = !post.isInFavs;
+//            boolean err;
+//
+//            if (post.in_favourites)
+//                err = U.user.removeFromFavs(post);
+//            else
+//                err = U.user.addToFavs(post);
+//
+//            if (!err)
+//                post.isInFavs = !post.isInFavs;
             return null;
         }
 
         @Override protected void onPostExecute(Void aVoid) {
-            if (post.isInFavs)
+            if (post.in_favourites)
                 fav.setImageDrawable(U.res.getDrawable(R.drawable.favourites_active));
             else
                 fav.setImageDrawable(U.res.getDrawable(R.drawable.favourites_not_active));
@@ -738,20 +745,27 @@ public class PostActivity extends MultitaskingActivity {
 
             assert data != null;
 
-            if (action == ACTION_REPLY)
-                return post.comment(U.user, data.in_reply_to.id, data.reply_body);
-
-            if (action == ACTION_ADD)
-                return post.comment(U.user, 0, data.reply_body);
-
             if (action == ACTION_EDIT) {
-                String redacted = data.in_reply_to.edit(U.user, post, data.reply_body);
-                if (redacted != null) {
-                    data.in_reply_to.body = redacted;
-                    comments.get(comments.getIndexByID(data.in_reply_to.id)).clearCache();
-                }
-                return redacted == null;
+
+//                String redacted = data.in_reply_to.edit(U.user, post, data.reply_body);
+//
+//                if (redacted != null) {
+//                    data.in_reply_to.body = redacted;
+//                    comments.get(comments.getIndexByID(data.in_reply_to.id)).clearCache();
+//                }
+
+//                return redacted == null;
+                return false;
+            } else {
+                new CommentAddRequest(
+                        Types.TOPIC,
+                        post.id,
+                        action == ACTION_ADD ? 0 : data.in_reply_to.id,
+                        data.reply_body
+                ).exec(U.user, page);
             }
+
+
             throw new RuntimeException("Попытка вызвать неизвестное действие!");
 
         }
@@ -790,9 +804,7 @@ public class PostActivity extends MultitaskingActivity {
             CommentVote vote = params[0];
             assert vote != null;
 
-            post.vote(U.user, vote.id, vote.vote);
-
-            return post.vote(U.user, vote.id, vote.vote);
+            return new VoteRequest(vote.id, vote.vote, Types.COMMENT).exec(U.user, page).success();
         }
 
         @Override protected void onPostExecute(Boolean status) {

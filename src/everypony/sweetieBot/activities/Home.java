@@ -12,12 +12,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import com.cab404.libtabun.parts.Blog;
-import com.cab404.libtabun.parts.BlogList;
-import com.cab404.libtabun.parts.PaWPoL;
-import com.cab404.libtabun.parts.UserInfo;
-import com.cab404.libtabun.util.html_parser.HTMLParser;
-import com.cab404.libtabun.util.html_parser.Tag;
+import com.cab404.libtabun.data.Blog;
+import com.cab404.libtabun.data.Profile;
+import com.cab404.libtabun.data.Topic;
+import com.cab404.libtabun.pages.BlogPage;
+import com.cab404.moonlight.parser.HTMLTree;
+import com.cab404.moonlight.parser.Tag;
+import com.cab404.moonlight.util.SU;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 import everypony.sweetieBot.other.ImageLoader;
@@ -26,6 +27,7 @@ import everypony.sweetieBot.wrappers.BlogWrapper;
 import everypony.sweetieBot.wrappers.PostWrapper;
 import everypony.sweetieBot.wrappers.SettingsWrapper;
 
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -91,7 +93,7 @@ public class Home extends MultitaskingActivity {
 
         initPseudoBar();
 
-        if (U.user.isLoggedIn()) {
+        if (U.isLoggedIn()) {
             // Выставляем список в NavList
             generateNavList();
         } else {
@@ -101,7 +103,7 @@ public class Home extends MultitaskingActivity {
 
 
         // Достаём главную
-        AsyncTask<String, Void, Blog> task = new GetPage().execute("/index/");
+        AsyncTask task = new GetPage().execute("/index/");
         addTask(task);
 
     }
@@ -154,7 +156,7 @@ public class Home extends MultitaskingActivity {
                 @Override public boolean onQueryTextSubmit(String query) {
                     content_list.setAdapter(null);
                     search_bar.clearFocus();
-                    AsyncTask task = new GetPage().execute("/search/topics/?q=" + com.cab404.libtabun.util.SU.rl(search_bar.getQuery() + "") + "&/");
+                    AsyncTask task = new GetPage().execute("/search/topics/?q=" + SU.rl(search_bar.getQuery() + "") + "&/");
                     addTask(task);
                     return true;
                 }
@@ -212,7 +214,7 @@ public class Home extends MultitaskingActivity {
             @Override void onInvoke() {
                 drawer.closeDrawer(GravityCompat.START);
                 final BlogWrapper.BlogListWrapper wrapper = new BlogWrapper.BlogListWrapper() {
-                    @Override public void onItemClick(BlogList.BlogLabel blog_url) {
+                    @Override public void onItemClick(Blog blog_url) {
                         new PageLink(blog_url.name, "/blog/" + blog_url.url_name + "/").onInvoke();
                     }
                 };
@@ -229,20 +231,21 @@ public class Home extends MultitaskingActivity {
 
         nav_adapter.labels.add(new PageLink("Новые", "/index/newall/"));
         try {
-            for (UserInfo.Userdata ud : U.user_info.personal) {
-                HTMLParser blogs = null;
+            for (Map.Entry<Profile.UserInfoType, String> ud : U.user_info.personal.entrySet()) {
+                HTMLTree blogs = null;
 
-                if (ud.data_type == UserInfo.Userdata.UserdataType.BELONGS)
-                    blogs = new HTMLParser(ud.value.replaceAll("\t", ""));
-                if (ud.data_type == UserInfo.Userdata.UserdataType.ADMIN)
-                    blogs = new HTMLParser(ud.value.replaceAll("\t", ""));
-                if (ud.data_type == UserInfo.Userdata.UserdataType.CREATED)
-                    blogs = new HTMLParser(ud.value.replaceAll("\t", ""));
+                switch (ud.getKey()) {
+                    case BELONGS:
+                    case ADMIN:
+                    case CREATED:
+                        blogs = new HTMLTree(ud.getValue().replaceAll("\t", ""));
+                        break;
+                }
 
                 if (blogs == null) continue;
 
-                for (Tag blog : blogs.getAllTagsByName("a")) {
-                    if (blog.isClosing) continue;
+                for (Tag blog : blogs.xPath("a")) {
+                    if (blog.isClosing()) continue;
                     String name = blogs.getContents(blog);
                     String link = blog.props.get("href").substring("http://tabun.everypony.ru".length());
                     nav_adapter.labels.add(new PageLink(name, link));
@@ -257,7 +260,7 @@ public class Home extends MultitaskingActivity {
         // Добавляем юзерокошко.
         View view = getLayoutInflater().inflate(R.layout.user_label, navigation_list, false);
         ((TextView) view.findViewById(R.id.name)).setText(U.user_info.name);
-        ((TextView) view.findViewById(R.id.nick)).setText(U.user_info.nick);
+        ((TextView) view.findViewById(R.id.nick)).setText(U.user_info.login);
         ((TextView) view.findViewById(R.id.strength)).setText(U.user_info.strength + "");
         ((TextView) view.findViewById(R.id.votes)).setText(U.user_info.votes + "");
         ImageLoader.loadImage(U.user_info.big_icon, new ImageLoader.InsertIntoView((ImageView) view.findViewById(R.id.avatar)));
@@ -279,35 +282,35 @@ public class Home extends MultitaskingActivity {
     /**
      * Загружает и пихает страницу с лэйблами постов в content_view
      */
-    private class GetPage extends AsyncTask<String, Void, Blog> {
+    private class GetPage extends AsyncTask<String, Void, BlogPage> {
 
         @Override protected void onPreExecute() {
             super.onPreExecute();
             content_list.setAdapter(new EmptyLoadingAdapter());
         }
 
-        @Override protected Blog doInBackground(String... params) {
+        @Override protected BlogPage doInBackground(String... params) {
             if (_lock_getpage) return null;
             _lock_getpage = true;
             final String page_name = params[0];
 
-            Blog page;
 
-            page = new Blog(U.user, "") {
-                @Override public String getUrl() {
+            BlogPage page = new BlogPage(new Blog("")) {
+                @Override public String getURL() {
                     return page_name;
                 }
             };
+            page.fetch(U.user);
 
             return page;
         }
 
-        @Override protected void onPostExecute(Blog blog) {
+        @Override protected void onPostExecute(BlogPage blog) {
             if (blog == null) return;
 //            U.v("Пришла страничка!");
-            PostWrapper.PostLabelList list = new PostWrapper.PostLabelList(blog);
+            PostWrapper.PostLabelList list = new PostWrapper.PostLabelList(blog.blog);
 
-            for (PaWPoL.PostLabel post : blog.posts) {
+            for (Topic post : blog.topics) {
                 list.add(post);
             }
 
@@ -372,9 +375,11 @@ public class Home extends MultitaskingActivity {
             drawer.closeDrawer(GravityCompat.START);
             ImageLoader.dropTasks();
             AsyncTask task = new GetPage() {
-                @Override protected void onPostExecute(Blog blog) {
+                @Override protected void onPostExecute(BlogPage blog) {
                     U.v("Загружено!");
+
                     super.onPostExecute(blog);
+
                     if (blog != null)
                         ((TextView) action_bar_view.findViewById(R.id.title)).setText(title);
                 }

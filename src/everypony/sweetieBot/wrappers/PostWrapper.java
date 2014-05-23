@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.cab404.libtabun.parts.Blog;
-import com.cab404.libtabun.parts.PaWPoL;
-import com.cab404.libtabun.util.SU;
-import com.cab404.libtabun.util.U;
+import com.cab404.libtabun.data.Blog;
+import com.cab404.libtabun.data.Topic;
+import com.cab404.libtabun.pages.BlogPage;
+import com.cab404.moonlight.util.SU;
+import com.cab404.moonlight.util.U;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.activities.PostActivity;
 import everypony.sweetieBot.other.ImageLoader;
@@ -31,11 +32,12 @@ public class PostWrapper {
      */
     public static class PostLabelList extends everypony.sweetieBot.U.FixedAdapter {
         private ArrayList<PostCache> labels = new ArrayList<>();
-        public Blog blog;
+
+        public BlogPage blogPage;
         boolean loading = false, finished = false;
 
         public PostLabelList(Blog blog) {
-            this.blog = blog;
+            this.blogPage = new BlogPage(blog);
         }
 
         /**
@@ -44,9 +46,9 @@ public class PostWrapper {
         public static class PostCache {
             Vector<View> views;
             Vector<AsyncTask> tasks;
-            PaWPoL.PostLabel label;
+            Topic label;
 
-            public PostCache(PaWPoL.PostLabel lab) {
+            public PostCache(Topic lab) {
                 label = lab;
                 tasks = new Vector<>();
             }
@@ -55,7 +57,7 @@ public class PostWrapper {
         /**
          * Добавляет пост в страничку.
          */
-        public void add(PaWPoL.PostLabel label) {
+        public void add(Topic label) {
             labels.add(new PostCache(label));
         }
 
@@ -81,21 +83,28 @@ public class PostWrapper {
                 new AsyncTask<Void, Void, Boolean>() {
                     @Override protected Boolean doInBackground(Void... params) {
                         try {
-                            return blog.loadNextPage(everypony.sweetieBot.U.user);
+
+                            blogPage.fetch(everypony.sweetieBot.U.user);
+                            blogPage.page++;
+
+                            return true;
+
                         } catch (Exception ex) {
                             U.w("Интернет плохой, загрузка новой страницы отменена.");
                             return null;
                         }
                     }
 
-                    @Override protected void onPostExecute(Boolean aBoolean) {
-                        if (aBoolean == null) {
+                    @Override protected void onPostExecute(Boolean success) {
+                        if (success == null) {
                             return;
                         }
-                        if (aBoolean)
-                            for (PaWPoL.PostLabel lab : blog.posts) {
+
+                        if (success)
+                            for (Topic lab : blogPage.topics) {
                                 labels.add(new PostCache(lab));
                             }
+
                         else finished = true;
                         loading = false;
                         notifyDataSetChanged();
@@ -179,8 +188,9 @@ public class PostWrapper {
 
             for (AsyncTask task : post.tasks) task.cancel(false);
             post.tasks.clear();
+            if (post.label == null) return;
 
-            date.setText(post.label.time);
+            date.setText(post.label.date.toString());
 
             StringBuilder tags_joined = new StringBuilder();
             for (String str : post.label.tags)
@@ -188,16 +198,17 @@ public class PostWrapper {
             tags_joined.delete(tags_joined.length() - 2, tags_joined.length());
 
             tags.setText("Теги: " + tags_joined.toString());
-            title.setText(everypony.sweetieBot.U.deEntity(post.label.name));
+            title.setText(everypony.sweetieBot.U.deEntity(post.label.title));
             votes.setText(post.label.votes);
-            author.setText(post.label.author.nick);
+            author.setText(post.label.author.login);
             comments.setText(post.label.comments + (post.label.comments_new > 0 ? "+" + post.label.comments_new : ""));
             blog_name.setText(post.label.blog.name);
 
-            if (post.views == null) post.views = TextWrapper.wrap(post.label.content, content, twel);
+            if (post.views == null) post.views = TextWrapper.wrap(post.label.text, content, twel);
             TextWrapper.insert(content, post.views);
 
             avatar.setImageDrawable(everypony.sweetieBot.U.res.getDrawable(R.drawable.refresh));
+
 
             AsyncTask task = ImageLoader.loadImage(post.label.author.mid_icon, new ImageLoader.InsertIntoView(avatar));
             if (task != null)

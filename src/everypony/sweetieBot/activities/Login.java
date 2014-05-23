@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import com.cab404.libtabun.pages.ProfilePage;
 import com.cab404.libtabun.pages.TabunPage;
-import com.cab404.libtabun.parts.User;
-import com.cab404.libtabun.parts.UserInfo;
-import com.cab404.libtabun.util.SU;
-import com.cab404.moonlight.framework.AccessProfile;
+import com.cab404.libtabun.util.TabunAccessProfile;
 import everypony.sweetieBot.U;
 
 /**
@@ -44,29 +42,37 @@ public class Login extends Activity {
             if (resultCode == RESULT_OK) {
                 final String token = data.getStringExtra("everypony.tabun.cookie");
                 U.v(token);
+
                 new AsyncTask<Void, Void, Void>() {
                     @Override protected Void doInBackground(Void... voids) {
-                        U.user = new User(SU.sub(token, "PHPSESSID=", ";"));
-                        U.user.isLoggedIn = true;
 
-                        AccessProfile profile = AccessProfile.parseString(token);
+                        U.user = TabunAccessProfile.parseString(token);
+
                         TabunPage page = new TabunPage();
-                        page.fetch(profile);
+                        page.fetch(U.user);
 
+                        ProfilePage profile = new ProfilePage(page.c_inf.username);
+                        profile.fetch(U.user);
 
-                        U.user_info = new UserInfo(U.user, page.c_inf.username);
+                        U.c_inf = page.c_inf;
+
                         return null;
+
                     }
+
                     @Override protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
                         finish();
                     }
+
                 }.execute();
+
             }
+
             if (resultCode == RESULT_CANCELED) {
                 new AsyncTask<Void, Void, Void>() {
                     @Override protected Void doInBackground(Void... voids) {
-                        U.user = new User();
+                        U.user = new TabunAccessProfile();
                         return null;
                     }
                     @Override protected void onPostExecute(Void aVoid) {

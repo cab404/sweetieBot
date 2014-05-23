@@ -13,8 +13,9 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.cab404.libtabun.parts.User;
-import com.cab404.libtabun.parts.UserInfo;
+import com.cab404.libtabun.data.CommonInfo;
+import com.cab404.libtabun.data.Profile;
+import com.cab404.libtabun.util.TabunAccessProfile;
 import everypony.sweetieBot.other.ImageLoader;
 
 import java.io.*;
@@ -30,13 +31,21 @@ public class U {
     public static Context context;
     public static Resources res;
     public static File cacheDir, files;
-    public static User user;
     public static final int SDK = Build.VERSION.SDK_INT;
+
+
     /**
      * Информация о текущем пользователе
      * #NSA #lol
      */
-    public static UserInfo user_info;
+    public static Profile user_info;
+    public static CommonInfo c_inf;
+    public static TabunAccessProfile user;
+
+
+    public static boolean isLoggedIn(){
+        return c_inf == null;
+    }
 
     /**
      * Скидывает данные о Activity в статичное хранилище, дабы ими можно было воспользоваться

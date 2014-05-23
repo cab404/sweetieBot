@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.cab404.libtabun.parts.UserInfo;
+import com.cab404.libtabun.data.Profile;
+import com.cab404.moonlight.util.SU;
 import everypony.sweetieBot.R;
 import everypony.sweetieBot.U;
 import everypony.sweetieBot.other.ImageLoader;
@@ -19,7 +20,7 @@ import everypony.sweetieBot.wrappers.UserWrapper;
  */
 public class UserActivity extends Activity {
     String extractedNick = "";
-    UserInfo info;
+    Profile info;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,7 @@ public class UserActivity extends Activity {
         if ("PROFILE".equals(getIntent().getAction())) {
             extractedNick = String.valueOf(getIntent().getData());
         } else {
-            extractedNick = com.cab404.libtabun.util.SU.sub(String.valueOf(getIntent().getData()), "profile/", "/");
+            extractedNick = SU.sub(String.valueOf(getIntent().getData()), "profile/", "/");
         }
 
         if (U.user == null) {
@@ -47,7 +48,7 @@ public class UserActivity extends Activity {
 
     private void getter() {
         new UserWrapper.UserInfoGetter() {
-            @Override protected void onPostExecute(UserInfo userInfo) {
+            @Override protected void onPostExecute(Profile userInfo) {
                 if (userInfo == null) {
                     U.e("Ошибка при получении данных в UserActivity!");
                     finish();
@@ -64,7 +65,7 @@ public class UserActivity extends Activity {
 
         // Запихиваем всё в header с именем, кармой и другой фигнёй.
         View header = getLayoutInflater().inflate(R.layout.user_label, (ViewGroup) findViewById(R.id.list), false);
-        ((TextView) header.findViewById(R.id.nick)).setText(info.nick);
+        ((TextView) header.findViewById(R.id.nick)).setText(info.login);
         ((TextView) header.findViewById(R.id.name)).setText(info.name);
         ((TextView) header.findViewById(R.id.strength)).setText(info.strength + "");
         ((TextView) header.findViewById(R.id.votes)).setText(info.votes + "");
