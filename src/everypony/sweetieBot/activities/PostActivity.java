@@ -419,6 +419,7 @@ public class PostActivity extends MultitaskingActivity {
                     if (post.your_vote == -1) vote.setImageDrawable(U.res.getDrawable(R.drawable.rate_down));
                 }
             } else {
+
                 synchronized (comments) {
                     comments.add(values[0]);
                     if (values[0].is_new) {
@@ -426,6 +427,7 @@ public class PostActivity extends MultitaskingActivity {
                         setNewCommentsNum(scroll.size());
                     }
                 }
+
             }
         }
 
